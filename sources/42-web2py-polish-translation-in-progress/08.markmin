@@ -33,7 +33,7 @@ mail.settings.server = 'logging'
 a wiadomości email nie będą wysyłane, lecz zapisywane do konsoli.
 -------
 
-#### Konfiguracja emaila w Google App Engine
+#### Konfiguracja poczty elektronicznej w Google App Engine
 ``poczta elektroniczna w GAE``:inxx
 Aby wysłać wiadomość email z konta na Google App Engine:
 
@@ -46,7 +46,7 @@ W czasie pisania tego tekstu web2py nie obsługiwał załączników i szyfrowani
 #### Szyfrowanie x509 i PGP
 ``PGP``:inxx ``x509``:inxx
 
-W celu wysyłania wiadomości email zaszyfrowanych w standarcie x509 (SMIME) trzeba wykonać następującą konfigurację:
+W celu wysyłania wiadomości email zaszyfrowanych w standardzie x509 (SMIME) trzeba wykonać następującą konfigurację:
 ``
 mail.settings.cipher_type = 'x509'
 mail.settings.sign = True
@@ -65,7 +65,7 @@ Zastosuj nastepujące ustawienia:
 mail.settings.gpg_home = '/home/www-data/.gnupg/'
 mail.settings.cipher_type = 'gpg'
 mail.settings.sign = True
-mail.settings.sign_passphrase = 'twoje hasło'
+mail.settings.sign_passphrase = 'twoja tajna fraza'
 mail.settings.encrypt = True
 ``:code
 
@@ -74,11 +74,11 @@ mail.settings.encrypt = True
 
 Po zdefiniowaniu mailera ``mail`` wiadomość email można wysłać stosując:
 ``
-mail.send(to=['ktoś@przykład.com'],
-          subject='cześć',
+mail.send(to=['somebody@example.com'],
+          subject='hello',
           # Jeśli reply_to zostanie pominięty, użyty zostanie mail.settings.sender 
-          reply_to='my@przykład.com',
-          message='Jak się masz')
+          reply_to='us@example.com',
+          message='Hi there')
 ``:code
 
 Metoda ``mail.send()`` w razie powodzenia zwraca True a w przeciwnym wypadku False. Pełny wykaz argumentów tej metody jest następujący:
@@ -88,14 +88,14 @@ send(self, to, subject='None', message='None', attachments=[],
      raw=True, headers={})
 ``:code
 
-Zwróć uwagę, że ``to``, ``cc``, and ``bcc`` zawierają listę adresów emailowych.
+Proszę zwrócić uwagę, że każdy z argumentów ``to``, ``cc``, and ``bcc`` pobiera listę adresów emailowych.
 
 ``sender`` ustawiony jest domyślnie na ``None`` i w tym przypadku nadawca będzie ustawiony na  ``mail.settings.sender``.
 
-``headers`` to słownik z nagłówkami, który oczyszcza nagłówki zanim nastapi wysłanie emaila. Na przykład:
+``headers`` jest słownikiem nagłówków do oczyszczenia przed wysłaniem wiadomości email. Na przykład:
 
 ``
-headers = {'Return-Path' : 'powrót@przykład.org'}
+headers = {'Return-Path' : 'bounces@example.org'}
 ``:code
 
 Poniżej zademonstrowane są dodatkowe przykłady użycia ``mail.send()``.
@@ -103,46 +103,46 @@ Poniżej zademonstrowane są dodatkowe przykłady użycia ``mail.send()``.
 #### Prosty tekst wiadomości email
 
 ``
-mail.send('twój@przykład.com',
-  'Tytuł wiadomości',
-  'Ciało tekstu wiadomości')
+mail.send('you@example.com',
+  'Message subject',
+  'Plain text body of the message')
 ``:code
 
-#### Emaile HTML 
+#### Wiadomości email w formacie HTML 
 
 ``
-mail.send('twój@przykład.com',
-  'Tytuł wiadomości',
-  '<html>Ciało html</html>')
+mail.send('you@example.com',
+  'Message subject',
+  '<html>html body</html>')
 ``:code
 
-Jeśli ciało wiadomości email zaczyna się od ``<html>`` i kończy na ``</html>``, zostanie ona wysłana jako HTML.
+Jeśli zawartość wiadomości email zaczyna się od ``<html>`` i kończy na ``</html>``, zostanie ona wysłana jako wiadomość email HTML.
 
 #### Połączenie emaila tekstowego z emailem HTML
 
-Wiadomość zawarta w emailu może mieć postać tupli (text, html):
+Wiadomość zawarta w emailu może mieć postać krotki (text, html):
 
 ``
 mail.send('twój@przykład.com',
-  'Tytuł wiadomości',
-  ('Czysty tekst ciała', '<html>Ciało html</html>'))
+  'Message subject',
+  ('Plain text body of the message', '<html>html body</html>'))
 ``:code
 
-#### Emaile ``cc`` i ``bcc`` 
+#### Adresy email ``cc`` i ``bcc`` 
 
 ``
-mail.send('twój@przykład.com',
-  'Tytuł wiadomości',
-  'Czysty tekst ciała',
-  cc=['inny1@przykład.com', 'inny2@przykład.com'],
-  bcc=['inny3@przykład.com', 'inny4@przykład.com'])
+mail.send('you@example.com',
+  'Message subject',
+  'Plain text body of the message',
+  cc=['other1@example.com', 'other2@example.com'],
+  bcc=['other3@example.com', 'other4@example.com'])
 ``:code
 
 #### Załączniki
 
 ``
-mail.send('twój@przykład.com',
-  'Tytuł wiadomości',
+mail.send('you@example.com',
+  'Message subject',
   '<html><img src="cid:zdjęcie" /></html>',
   zalaczniki = mail.Attachment('/scieżka/do/zdjęcia.jpg', content_id='zdjęcie'))
 ``:code
@@ -150,18 +150,18 @@ mail.send('twój@przykład.com',
 #### Wiele załączników
 
 ``
-mail.send('twój@przykład.com',
-  'Tytuł wiadomości',
-  'Ciało wiadomości',
+mail.send('you@example.com',
+  'Message subject',
+  'Plain text body of the message',
   zalaczniki = [mail.Attachment('/ścieżka/do/pierwszego.pliku'),
                  mail.Attachment('/ścieżka/do/drugiego.pliku')])
 ``:code
 
 ### Wysyłanie wiadomości SMS
 ``SMS``:inxx
-Do wysłania wiadomości SMS za pomocą aplikacji web2py konieczna jest usługa zewnętrzna, która prześle wiadomość do odbiorcy. Zazwyczaj jest to usługa odpłatna, ale zależy to od kraju. Sprawdziliśmy kilka z nich, niestety ze słabym skutkiem. Firmy telekomunikacyjne blokują emaile wysyłane za ich pomocą, gdyż są one najczęściej źródłem spamu. 
+Wysyłanie wiadomości SMS za pomocą aplikacji web2py wymaga usługi firmy trzeciej, która może przesłać wiadomości do odbiorcy. Zazwyczaj jest to usługa odpłatna, ale zależy to od kraju. Sprawdziliśmy kilka z nich, niestety ze słabym skutkiem. Firmy telekomunikacyjne blokują emaile wysyłane za ich pomocą, gdyż są one najczęściej źródłem spamu. 
 
-Lepszą alternatywą jest wykorzystanie firm telekomunikacyjnych do przesyłania SMS-ów. Każda z nich, bowiem, przypisuje unikatowy adres emailowy do numeru telefonu komórkowego, dzięki czemu wiadmości SMS mogą być wysyłane jako emaile na telefon komórkowy. 
+Lepszym rozwiązaniem jest wykorzystanie firm telekomunikacyjnych. Bowiem każda z nich przypisuje unikatowy adres emailowy do numeru telefonu komórkowego, dzięki czemu wiadmości SMS mogą być wysyłane jako wiadomości email na telefon komórkowy. 
 
 Web2py posiada moduł, który ułatwia to zadanie:
 ``
@@ -170,19 +170,19 @@ email = sms_email('1 (111) 111-1111','T-Mobile USA (tmail)')
 mail.send(to=email, subject='test', message='test')
 ``:code
 
-SMSCODES to słownik, który przypisuje nazwy największych firm telekomunikacyjnych do przyrostka adresu emailowego. Funkcja ``sms_email`` zwraca adres emailowy telefonu składający się z numeru telefonu (jako ciągu znaków) oraz nazwy firmy telekomunikacyjnej .
+SMSCODES to słownik odwzorowujący nazwy głównych firm telekomunikacyjnych na adresy email postfixa. Funkcja sms_email pobiera numer telefonu (jako ciąg znakowy) i nazwę firmy telekomunikacyjnej, a zwraca adres email telefonu.
 
 ### Wykorzystanie systemu szablonów do generowania wiadomości
 ``wiadomości email``:inxx
 
-Do wygenerowania wiadomości można wykorzystać system szablonów. Rozważmy przykładową tablicę bazy danych:
+Do wygenerowania wiadomości można wykorzystać system szablonów. Na przykład, rozważmy przykładową tabelę bazy danych:
 ``
-db.define_table('osoba', Field('imię'))
+db.define_table('person', Field('name'))
 ``:code
 
-gdzie do każdej osoby w bazie danych chcemy wysłać następującą wiadomość, zawartą w pliku  "message.html" umieszczonym w widoku:
+gdzie do każdej osoby w bazie danych chcemy wysłać następującą wiadomość, zapisaną w pliku  widoku "message.html":
 ``
-Drogi {{=osoba.imię}},
+Drogi {{=person.name}},
 Wygrałeś drugą nagrodę, zestaw noży do krojenia steków.
 ``:code
 
@@ -190,114 +190,116 @@ Można tego dokonać w następujący sposób:
 ``
 for person in db(db.person).select():
     context = dict(person=person)
-    message = response.render('wiadomość.html', context)
-    mail.send(to=['ktos@przykład.com'],
+    message = response.render('message.html', context)
+    mail.send(to=['who@example.com'],
               subject='None',
               message=message)
 ``:code
 
 Większą część zadania wykonuje wyrażenie
 ``
-response.render('wiadomość.html', context)
+response.render('message.html', context)
 ``:code
 
-Przekazuje ono zmienne zdefiniowane w słowniku "contex" do pliku "wiadomość.html", i zwraca ciąg znaków wraz z tekstem wiadomości email. Context to słownik zawierający zmienne, które będą udostepnione plikowi szablonu.
+Kod ten renderuje widok "message.html" ze zmiennymi zdefiniowanymi w słowniku "context" i zwraca ciąg znakowy z przetworzonym tekstem wiadomości email. Argument context jest słownikiem zawierającym zmienne, które będą widoczne w pliku szablonowym.
 
-Jeśli wiadomośc email zaczyna się od ``<html>`` i kończy na ``</html>``, email będzie miał charakter HTML.
+Jeśli zawartość wiadomości email zaczyna się od ``<html>`` i kończy na ``</html>``, to wiadomość email będzie miała format HTML.
 
-Zauważ, że w celu załączenia do wiadomości email linku powrotnego do twojej strony internetowej, można użyć funkcji ``URL``. Niestesty, funkcja ``URL`` domyślnie generuje względny adres URL, który nie zadziała poprawnie w przypadku wiadomości email. Aby wygenerować absolutną ścieżkę URL, należy sprecyzować argumenty ``scheme`` i ``host`` w funkcji URL. Na przykład:
+Uwaga, jeśli chce się umieścić w zawartości HTML odnośnik zwrotny do swojej strony, to można skorzystać z funkcji ``URL``. Aczkolwiek, funkcja ``URL`` domyślnie generuje względny adres URL, który może nie działać w poczcie elektronicznej. Aby wygenerować bezwzględny adres URL, należy określić w funkcji URL argumenty ``scheme`` i ``host``. Na przykład:
+
 ``
 <a href="{{=URL(..., scheme=True, host=True)}}">Kliknij tutaj</a>
 ``:code
 
-or
+lub
 
 ``
 <a href="{{=URL(..., scheme='http', host='www.strona.com')}}">Kliknij tutaj</a>
 ``:code
 
-Ten sam mechanizm szablonów, który służy do wygenerowania tekstu wiadomości email może posłużyć do stworzenia zarówno wiadomości SMS jak i wiadomości innego typu.
+Ten sam mechanizm, który służy do wygenerowania tekstu wiadomości email może być również wykorzystany do wygenerowania wiadomości SMS jak i wiadomości innego typu.
 
 ### Wysyłanie wiadomości za pomocą zadania uruchomionego w tle
 
 
-Wysłanie wiadomości email może trwać nawet do kilkunastu sekund, gdyż najczęściej wykjorzystywany jest do tego celu zdalny serwer SMTP wymagający procesu logowania i nawiązania łączności. Aby skrócić użytkownikowi czas oczekiwania na zakończenie tej operacji, pożądane jest czasem ustawienie wiadomości email w kolejce do wykonania w późniejszym czasie, za pomocą zadania w tle. Jak opisano w Rozdziale 4, zadanie takie można ustawić samemu tworząc własna kolejkę lub korzystając z terminarza. Poniżej przedstawiono przykład wykorzystania własnej kolejki zadań.
+Operacja wysyłania wiadomości email może potrwać kilka sekund, ponieważ konieczne jest zalogowanie się i nawiązanie łączności ze zdalnym serwerem SMTP, z którego przeważnie się korzysta. Aby skrócić czas oczekiwania przez użytkownika na zakończenie tej operacji, pożądane jest czasem ustawienie wiadomości email w kolejce, tak aby wysłana była później poprzez zadanie działające w tle. Jak opisano w Rozdziale 4, zadanie takie można ustawić samemu tworząc własną kolejkę lub korzystając z terminarza. Poniżej przedstawiamy przykład wykorzystania własnej kolejki zadań.
 
-Najpierw, w pliku modelu naszej aplikacji tworzymy model bazy danych do przechowywania wiadomości email:
+
+Najpierw, w pliku modelu aplikacji tworzymy model bazy danych do przechowywania kolejki email:
 ``
-db.define_table('kolejka',
+db.define_table('queue',
     Field('status'),
     Field('email'),
-    Field('tytuł'),
-    Field('wiadomość'))
+    Field('subject'),
+    Field('message'))
 ``:code
 
-Za pomoca kontrolera wiadomości do wysłania wstawiamy do kolejki:
+Następnie w kontrolerze ustawiamy w kolejce wiadomości do wysłania:
 ``
-db.queue.insert(status='oczekujące',
-                email='twój@przykład.com',
+db.queue.insert(status='pending',
+                email='you@example.com',
                 subject='test',
                 message='test')
 ``:code
 
-Nastepnie, wykorzystamy działający w tle skrypt, który odczytuje kolejkę i przesyła wiadomości:
+Po czym utworzymy skrypt działający w tle, który odczyta kolejkę i wyśle wiadomości:
 ``
 ## w pliku /app/private/mail_queue.py
 import time
 while True:
-    rows = db(db.queue.status=='oczekujące').select()
+    rows = db(db.queue.status=='pending').select()
     for row in rows:
         if mail.send(to=row.email,
             subject=row.subject,
             message=row.message):
-            row.update_record(status='wysłane')
+            row.update_record(status='sent')
         else:
-            row.update_record(status='nieudane')
+            row.update_record(status='failed')
         db.commit()
     time.sleep(60) # sprawdzaj co minutę
 ``:code
 
-Na koniec, tak jak opisano w Rozdziale 4, posługując się ponizszymi opcjami, musimy wykonać skrypt mail_queue.py w taki sposób, jak gdbyby był umieszczony wewnątrz kontrolera naszej aplikacji.
+Na sam koniec, tak jak opisano w Rozdziale 4, musimy wykonać skrypt mail_queue.py w taki sposób, jak by był umieszczony wewnątrz kontrolera aplikacji.
 ``
 python web2py.py -S app -M -R applications/app/private/mail_queue.py
 ``:code
 
 gdzie opcja ``-S app`` nakazuje web2py wykonanie "mail_queue.py" jako "app", ``-M`` nakazuje web2py wykonanie operacji na modelach.
 
-Zakładamy , że obiekt ``mail``, do którego odnosi się "mail_queue.py" zdefiniowany jest w pliku modelowym naszej aplikacji, a dzięki opcji ``-M`` jest on dostępny w skrypcie "mail_queue.py". W celu uniknięcia zablokowania bazy danych przez inny, współbieżny proces, wszelkich zmian należy dokonywać jak najszybciej.
+Zakładamy, że obiekt ``mail`` przywoływany w skrypcie "mail_queue.py" został zdefiniowany w pliku modelu aplikacji i dlatego, że użyto opcję ``-M``, jest dostępny w skrypcie "mail_queue.py". W celu uniknięcia zablokowania bazy danych przez inny, współbieżny proces, ważne jest, aby wprowadzać jak najszybciej każdą zmianę.
 
 Jak wspomniano w Rozdziale 4, ten typ procesów uruchamianych w tle nie powinien być wykonywany przez  cron (za wyjątkiem, powiedzmy, cron @reboot), gdyż tylko jedno zdarzenie takiego typu może być wykonywane w danej chwili.
 
-Jednym z uniedogodnień korzystania z procesu uruchamianego w tle w celu wysyłania wiadomości email jest  trudność przekazania informacji zwrotnej do użytkownika na wypadek, gdyby wysyłanie emaila zakończyła się niepowodzeniem. Jeśli wiadomość zostanie wysłana bezpośrednio z kontrolera, ewentualne błędy mogą być natychmiast przechwycone i przesłane do użytkownika. W przypadku procesu w tle, email wysyłany jest asynchronicznie, już po zwróceniu odpowiedzi przez kontroler, utrudniając tym samym powiadomienie użytkownika o błędzie.
+Jedną z wad wysyłania wiadomości email z wykorzystaniem procesu działającego w tle jest to, że trudno jest dostarczyć użytkownikowi informację zwrotną w przypadku niepowodzenia wysyłki. Jeśli wiadomość email zostanie wysłana bezpośrednio z poziomu akcji kontrolera, to można przechwycić błędy i natychmiast zwrócić komunikat o błędzie. Jednakże w przypadku procesu działającego tle, wiadomość email jest wysyłana asynchronicznie już po zwróceniu odpowiedzi przez akcję kontrolera, utrudniając tym samym powiadomienie użytkownika o błędzie.
 
 
 ### Czytanie i zarządzanie skrzynkami pocztowymi (Eksperymentalne)
 
-Adapter ``IMAP`` jest interfejsem emailowych serwerów, a jego zadanie polega na wykonywaniu prostych zapytań w składni ``DAL`` web2py, w taki sposób, aby czytanie, przeszukiwanie oraz inne usługi IMAP poczty elektronicznej takie, jak wdrożone przez Google(r) czy Yahoo(r), mogły być zarządzane z poziomu aplikacji web2py.
+Adapter ``IMAP`` jest interfejsem serwerów IMAP wykonujących proste kwerendy składni ``DAL`` web2py, tak więc wiadomości są odczytywane, wyszukiwane oraz wykonywane są inne usługi związane z pocztą IMAP, na przykład usługi zaimplementowane przez przez marki Google(r) i Yahoo(r) mogą być zarządzanie z poziomu aplikacji web2py.
 
-Tworzy on własne tabele i nazwy pól w sposób "statyczny", a to oznacza, że twórca oprogramowania nie powinien ich sam definiować, lecz pozwolić procesowi DAL na ich wykonanie poprzez wywołanie metody ``.define_tables()`` adaptera. Tabele są zdefiniowane wraz z listą informacji o skrzynkach pocztowych serwera IMAP. 
+Adapter ten tworzy "statycznie" własne tabele nazwy pól, co oznacza, że programista nie powinien ich sam definiować, pozostawiając to zadanie instancji DAL przez wywołanie metody adaptera`` .define_tables()``. Tabele zostają zdefiniowane z informacjami o liście skrzynek pocztowych serwera IMAP. 
 
 
 #### Nawiązanie połączenia
 
-Oto zalecany kod rozpoczęcia wsparcia IMAP w modelu aplikacji dla pojedynczego konta poczty elektronicznej.
+Oto zalecany kod rozpoczynający obsługę IMAP w modelu aplikacji dla pojedynczego konta pocztowego.
 
 ``
-# Wstaw użytkownika, hasło, serwer i port w definicji połączenia
-# Ustaw port na 993 dla połączeń SSL
+# Zamień odpowiednio user, password, server i port w łańcuchu połączenia
+# Ustaw port na 993 przy obsłudze SSL
 imapdb = DAL("imap://user:password@server:port", pool_size=1)
 imapdb.define_tables()
 ``:code
 
-Zauważ, że ``<imapdb>.define_tables()`` zwraca słownik składający się z ciągu zmapowanych nazw tabel DAL z nazwami skrzynek pocztowych serwera o nastepującej strukturze ``{<tablename>: <server mailbox name>, ...}``, w taki sposób aby uzyskać odpowiednią nazwę skrzynki pocztowej na serwerze IMAP.
+Proszę zwrócić uwagę, że ``<imapdb>.define_tables()`` zwraca słownik łańcuchów odwzorowujących nazwy tabel DAL na nazwy skrzynek pocztowych serwera o następującej strukturze ``{<tablename>: <server mailbox name>, ...}``, tak więc istnieje możliwość pobrania rzeczywistej nazwy skrzynki pocztowej na serwerze IMAP.
 
-W celu stworzenia własnej konfiguracji tabela/skrzynka pocztowa i pominięcia automatycznej konfiguracji nazw, można przekazać własny słownik do adaptera w poniższy sposób:
+W celu stworzenia własnej konfiguracji tabela/skrzynka pocztowa i pominięcia automatycznej konfiguracji nazw, można przekazać do adaptera własny słownik w ten sposób:
 
 ``
 imapdb.define_tables({"inbox": "MAILBOX", "trash", "SPAM"})
 ``:code
 
-Aby ułatwić operowanie różnymi natywnymi nazwami skrzynek pocztowych w interfejsie użytkownika, poniższe atrybuty pozwalają na dostęp do automatycznie przypisanych przez adapter nazw skrzynek pocztowych (która natywna skrzynka pocztowa odpowiada danej tabeli i odwrotnie):
+Aby umożliwić obsługę różnych natywnych nazw skrzynek pocztowych w interfejsie użytkownika, web2py udostępnia następujące atrybuty pozwalające na dostęp automatycznie odwzorowywanych nazw (gdzie natywnej nazwie skrzynki pocztowej odpowiada nazwa tabeli i odwrotnie):
 
 -------------------------------------
 **Attribute** | **Type** | **Format**
@@ -305,20 +307,19 @@ imapdb.mailboxes | dict | ``{<tablename>: <server native name>, ...}``
 imapdb.<table>.mailbox | string | ``"server native name"``
 -------------------------------------
 
-Pierwszy atrybut może być wykorzystany w celu pobrania zestawu zapytań IMAP przez natywną skrzynkę pocztową usługi poczty elektronicznej
+Pierwszy z tych atrybutów może być przydatny do pobierania zestawu zapytań IMAP przez natywną skrzynkę pocztową usługi poczty elektronicznej
 
 ``
-# mailbox jest ciągiem znaków zawierającym aktualną nazwę skrzynki pocztowej
+# mailbox jest ciągiem znakowym zawierającym rzeczywistą nazwę skrzynki pocztowej
 tablenames = dict([(v,k) for k,v in imapdb.mailboxes.items()])
 myset = imapdb(imapdb[tablenames[mailbox]])
 ``:code
 
-#### Przechwytywanie wiadomości email i aktualizacja flag
+#### Pobieranie poczty i aktualizowanie flag
 
-Oto lista komend IMAP, które można zastosować w kontrolerze. Na potrzeby poniższych przykładów, założono, że skrzynka pocztowa usługi IMAP nazywa się ``INBOX``, czyli tak samo jak w Gmail(r).
+Oto lista poleceń IMAP, które można zastosować w kontrolerze. Na potrzeby poniższych przykładów, zakłada się, że usługa IMAP ma skrzynkę pocztową o nazwie ``INBOX``, tak samo jak w przypadku kont Gmail(r).
 
-
-Aby zliczyć nieprzeczytane wiadomości mniejsze niż 60000 oktetów w skrzynce wiadomości przychodzących można wykonać:
+Dla zliczenia dzisiejszych nieprzeczytanych wiadomości mniejszych niż 60000 oktetów w skrzynce pocztowej Inbox, wykonaj:
 ``
 q = imapdb.INBOX.seen == False
 q &= imapdb.INBOX.created == request.now.date()
@@ -333,29 +334,29 @@ rows = imapdb(q).select()
 ``:code
 
 
-Zaimplementowano najpowszechniejsze operatory zapytań , włączając belongs
+Zaimplementowane zostały popularne operatory zapytań, w tym belongs:
 
 ``
 messages = imapdb(imapdb.INBOX.uid.belongs(<uid sequence>)).select()
 ``:code
 
-**Warto pamiętać**: W celu unikniecia zapchania serwera zbyt obszernymi komendami select, rozmiar wyników zapytania należy utrzymywać poniżej zadanego progu.
+**Uwaga**: W celu uniknięcie zatorów serwera pocztowego w wyniku dużych poleceń wybierających (select), zaleca się, aby utrzymywać wyniki zapytań poniżej określonego poziomu wielkości danych.
 
-W celu szybszych zapytań, zaleca się stosowanie przefiltrowanych zestawów pól:
+W celu przyśpieszenia zapytań, zaleca się przekazywanie przefiltrowanych zestawów pól:
 ``
 fields = ["INBOX.uid", "INBOX.sender", "INBOX.subject", "INBOX.created"]
 rows = imapdb(q).select(*fields)
 ``:code
 
-Adapter wie kiedy ma pobrać częściową zawartość wiadomości ( pola takie jak ``content``,``size`` i ``attachments`` wymagają pobrania wszystkich danych zawartych w wiadomości.
+Adapter wie kiedy ma pobrać cząstkowe porcje wiadomości ( pola takie jak ``content``,``size`` i ``attachments`` wymagają pobrania całości danych z tych pól).
 
-Wyniki zapytania select można przefiltrować stosując limitby oraz sekwencje pól skrzynki pocztowej.
+Wyniki zapytania wybierającego (select) można przefiltrować wykorzystując pola limitby oraz sequences skrzynki pocztowej.
 ``
-#W miejsce argumentów wstaw aktualne wartości
+#Zamień te wartości argumentów na rzeczywiste wartości
 myset.select(<fields sequence>, limitby=(<int>, <int>))
 ``:code
 
-Powiedzmy, że akcja w aplikacji ma wyswietlić wiadomość ze skrzynki pocztowej. Najpierw pobieramy tą wiadomość (jesli usługa IMAP daje taką możliwość, wiadomości można pobrać używając pól ``uid``, by uniknąć odniesień do starszych sekwencji).
+Powiedzmy, że chcemy napisać akcje aplikacji wyświetlającą wiadomość ze skrzynki pocztowej. Najpierw pobieramy tą wiadomość (jeśli usługa IMAP daje taką możliwość, trzeba pobrać wiadomości używając pole ``uid``, aby uniknąć odniesień do starej sekwencji).
 
 ``
 mymessage = imapdb(imapdb.INBOX.uid == <uid>).select().first()
@@ -367,9 +368,9 @@ W przeciwnym razie można użyć ``id`` wiadomości.
 mymessage = imapdb.INBOX[<id>]
 ``:code
 
-Korzystanie z id jako referencji nie jest zalecane, gdyż numery sekwencji mogą sie zmienić w wyniku procesów konserwacji poczty elektronicznej takich jak usuwanie wiadomości. Jeśli jednak wciąż wymagane jest przypisanie referencji do wiadomości (np. w innym polu bazy danych), rozwiązaniem będzie użycie pola uid jako referencji jeśli jest dostępne oraz pobrania każdej wiadomości z przypisaną wartością.
+Trzeba pamiętać, że używanie identyfikatora (id) wiadomości jako odniesienia nie jest zalecane, gdyż numeracja sekwencji może się zmienić w wyniku operacji konserwacji skrzynki pocztowej, takich jak usuwanie wiadomości. Jeśli jednak wciąż chcesz zarejestrować odniesienie do wiadomości (czyli w polu rekordu innej bazy danych), rozwiązaniem będzie użycie jako odniesienia pola ``uid``, jeśli jest obsługiwane i pobieranie każdej wiadomości z zarejestrowaną wartością.
 
-Na koniec, aby wyświetlić zawartość wiadomości w widoku, można zastosować poniższy przykład
+Na koniec, aby wyświetlić zawartość wiadomości, dodajmy w widoku coś podobnego do tego kodu:
 
 ``
 {{=P(T("Message from"), " ", mymessage.sender)}}
@@ -382,7 +383,7 @@ Na koniec, aby wyświetlić zawartość wiadomości w widoku, można zastosować
 ``:code
 
 
-Aby stworzyć listę wiadomości w widoku, można posłużyć się helperem ``SQLTABLE``.
+Zgodnie z oczekiwaniami, możemy w widoku skorzystać z helpera ``SQLTABLE`` do zbudowania listy wiadomości:
 
 ``
 {{=SQLTABLE(myset.select(), linkto=URL(...))}}
@@ -394,14 +395,14 @@ Oczywiście, możliwym jest również zasilenie helpera formularza odpowiednią 
 {{=SQLFORM(imapdb.INBOX, <message id>, fields=[...])}}
 ``:code
 
-Aktualnie wspomagane pola adaptera są nastepujące:
+Aktualnie obsługiwane adaptery udostępniają następujące pola:
 
 ---------------------------------------
 **Pole** | **Typ** | **Opis**
 uid | string | ````
 answered | boolean | Flaga
 created | date | ````
-content | list:string | Lista zawierająca tekst lub fragmenty html
+content | list:string | Lista zawierająca elementy tekstowe lub fragmenty html
 to | string | ````
 cc | string | ````
 bcc | string | ````
@@ -414,17 +415,17 @@ recent | boolean | Flaga
 seen | boolean  | Flaga
 subject | string| ````
 mime | string | Deklaracja nagłówka mime
-email | string | Cała zawartość wiadomości w standardzie RFC822**
-attachments | list | Każda zakodowana nietekstowa część jako słownik
-encoding | string | Kodowanie znaków części głównej wiadomości
+email | string | Kompletny komunikat RFC822**
+attachments | list | Każda nietekstowa zakodowana część jako słownik
+encoding | string | Wykryty główny zestaw znakowy wiadomości
 ---------------------------------------------------
 
-*Od strony aplikacji mierzy się go jako długość ciągu RFC822 wiadomości
+*Na stronie aplikacji jest to mierzone jako długość łańcucha komunikatu RFC822 
 
-**UWAGA**: w związku z tym, że numery id wierszy przypisane są do numerów sekwencji wiadomości, aby uniknąć niepożądanej aktualizacji lub usunięcia wiadomości, należy upewnić się, że klient IMAP aplikacji web2py nie usuwa wiadomości w trakcie wykonywania operacji select lub update.
+**UWAGA**: ponieważ identyfikatory wierszy są odwzorowywane na numery sekwencji wiadomości email, trzeba się upewnić, że klient IMAP aplikacji web2py nie usuwa wiadomości w trakcie wykonywania akcji wybierających i aktualizujących.
 
 
-Standardowe operacje ``CRUD`` bazy danych nie są wspomagane. Nie ma możliwości zdefiniowania własnych pól lub tabel oraz wstawienia innych typów danych, gdyż aktualizacja skrzynek pocztowych za pomocą serwisu IMAP jest zazwyczaj ograniczona do wystawienia flag aktualizacji na serwerze. Wciąż jednak możliwy jest dostęp do komend tych flag poprzez interface DAL IMAP.
+Nie są obsługiwane standardowe operacje ``CRUD`` bazy danych. Nie ma możliwości zdefiniowania własnych pól lub tabel i wstawiania odmiennych typów danych, gdyż aktualizacja skrzynek pocztowych usług IMAP jest zazwyczaj zredukowana do publikowania na serwerze flagi aktualizacji. Mimo to, możliwe jest uzyskanie dostępu do poleceń poprzez interfejs IMAP mechanizmu DAL.
 
 Aby oznaczyć wiadomości z ostatniego zapytania jako przeczytane:
 ``
